@@ -1,0 +1,14 @@
+2023-10-09 13:11:59,160 dumbo.py [line:426] run_bft INFO The consensus run time of Round 0 is 10.53411865234375 and the total run time is 10.53411865234375. 1 data consensus is complete. 
+2023-10-09 13:11:59,268 dumbo.py [line:249] db_client INFO 1---0.019333362579345703 
+2023-10-09 13:14:33,377 dumbo.py [line:426] run_bft INFO The consensus run time of Round 0 is 22.231569290161133 and the total run time is 22.231569290161133. 1 data consensus is complete. 
+2023-10-09 13:14:33,487 dumbo.py [line:249] db_client INFO 1---0.036975860595703125 
+2023-10-09 13:19:45,770 dumbo.py [line:426] run_bft INFO The consensus run time of Round 0 is 9.22675371170044 and the total run time is 9.22675371170044. 1 data consensus is complete. 
+2023-10-09 13:19:45,808 dumbo.py [line:249] db_client INFO 1---0.0381321907043457 
+2023-10-09 13:22:26,002 dumbo.py [line:426] run_bft INFO The consensus run time of Round 0 is 8.11789345741272 and the total run time is 8.11789345741272. 1 data consensus is complete. 
+2023-10-09 13:22:26,107 dumbo.py [line:249] db_client INFO 1---0.03850746154785156 
+2023-10-09 13:24:05,513 dumbo.py [line:426] run_bft INFO The consensus run time of Round 0 is 30.865873336791992 and the total run time is 30.865873336791992. 1 data consensus is complete. 
+2023-10-09 13:24:05,633 dumbo.py [line:249] db_client INFO 1---0.04841208457946777 
+2023-10-09 13:26:54,899 dumbo.py [line:426] run_bft INFO The consensus run time of Round 0 is 28.387827157974243 and the total run time is 28.387827157974243. 1 data consensus is complete. 
+2023-10-09 13:26:54,983 dumbo.py [line:249] db_client INFO 1---0.03582429885864258 
+2023-10-09 20:10:06,795 dumbo.py [line:426] run_bft INFO The consensus run time of Round 0 is 31.146180391311646 and the total run time is 31.146180391311646. 1 data consensus is complete. 
+2023-10-09 20:10:06,912 dumbo.py [line:249] db_client INFO 1---0.04455399513244629 
