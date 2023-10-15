@@ -45,7 +45,7 @@
     cd ..
    ```
 
-2. A quick start to run Dumbo-2 for 20 epochs with a batch size of 1000 tx can be:
+2. Run Consensus 1000 data, each copy of a single round of consensus proposed 10 data
    ```
    New terminal
        ./run_local_network_test.sh 4 1 10 1000
