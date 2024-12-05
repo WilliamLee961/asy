@@ -111,3 +111,4 @@
     done
  
    ```
+Note: The SGX-related code was not included in the repository, mainly due to deployment considerations. The code comparing on-chain and off-chain components was also not included, as the time for revising the paper was quite tight. 
