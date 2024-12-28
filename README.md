@@ -63,6 +63,4 @@
        python3 write_send.py
        python3 inquire_chain.py
    ```
-Note: The SGX-related code was not included in the repository, mainly due to deployment considerations. The code comparing on-chain and off-chain components was also not included, as the time for revising the paper was quite tight. 
-To use fabric on-chain, you need to write it yourself.
-In order to facilitate the experiment, the code writing is not very standardized, and the standardized code will be uploaded later.
+<span style="color:red;">Note:</span> The SGX-related experiments are not included in this repository because the logic is relatively simple, focusing only on verification within the SGX environment. You will need to deploy and implement the SGX part yourself. During the paper revision phase, the reviewers suggested adding a comparison with other protocols, but due to time constraints, the related code has not yet been organized or uploaded. For this, please refer to the paper's discussion on homomorphic encryption and IPFS integration to understand the required implementation details. The on-chain logic is implemented using the Fabric platform, which requires multi-threaded read and write operations while receiving messages from the off-chain components. You will need to write the code for this part yourself. Additionally, some parts of the current code version still require optimization. Future updates with improved and standardized code will be provided based on the team's schedule.
