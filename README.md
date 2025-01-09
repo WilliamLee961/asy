@@ -49,14 +49,14 @@
    ```
    New terminal
        ./run_local_network_test.sh 4 1 10 1000
+    
+   New terminal
+      cd user_client
+      python3 mock_fabric_server.py
    
    New terminal
        cd blockchain_server
        python3 main_chain.py
-   
-   New terminal
-       cd temp_db
-       python3 main_db.py
    
    New terminal
        cd user_client
