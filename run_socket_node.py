@@ -31,13 +31,13 @@ if __name__ == '__main__':
     parser.add_argument('--id', metavar='id', required=True,
                         help='identifier of node', type=int)
     parser.add_argument('--N', metavar='N', required=True,
-                        help='number of parties', type=int)
+                        help='number of parties', type=int) #4 
     parser.add_argument('--f', metavar='f', required=True,
-                        help='number of faulties', type=int)
+                        help='number of faulties', type=int) #1
     parser.add_argument('--B', metavar='B', required=True,
-                        help='size of batch', type=int)
+                        help='size of batch', type=int) #10
     parser.add_argument('--K', metavar='K', required=True,
-                        help='rounds to execute', type=int)
+                        help='rounds to execute', type=int) #1000
     parser.add_argument('--S', metavar='S', required=False,
                         help='slots to execute', type=int, default=50)
     parser.add_argument('--T', metavar='T', required=False,

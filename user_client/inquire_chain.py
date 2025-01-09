@@ -16,8 +16,8 @@ from crypto.ABE1.att_decrypt import decrypt
 from struct_package.unpack_struct import broadcast_uppack, attribute_unpack
 from responseSGX.routes import index
 
-id = 2
-n = 10
+id = 0
+n = 1
 
 txs = [None] * (n + 10)
 bufs = [None] * (n + 10)
@@ -54,10 +54,14 @@ def get_len(msg):
 
 
 def Client_send(host, port, tx):
+    print(tx)
     try:
         sk = socket.socket()
         sk.connect((host, port))
         _tx = get_len(tx)
+        # print("========")
+        print('-------',_tx, '---------')
+        # print("========")
         sk.sendall(_tx)
         # data = sk.recv(1024)
         print("YES")
@@ -68,11 +72,11 @@ def Client_send(host, port, tx):
 
 def _tyke(tyke_str):
     if tyke_str == "Broadcast encryption":
-        return 2
+        return 1
     elif tyke_str == "Attribute encryption":
-        return 4
+        return 3
     elif tyke_str == "Threshold encryption":
-        return 6
+        return 5
 
 
 def broadcast_keygen(sec_ACL):
@@ -90,23 +94,24 @@ def attribute_keygen():
 
 
 def sgx(tyke, sec_ACL, cACL):
-    try:
-        url = 'http://39.105.219.78:8000/sgx'
-        data = {'tyke': tyke, 'sec_ACL': sec_ACL, 'cACL': cACL}
-        headers = {'Content-Type': 'application/json'}
-        response = requests.post(url, data=json.dumps(data), headers=headers)
-        data = response.json()
-        print("Access SGX successfully")
-        return data["Flag"]
-    except:
-        print("Unable to access SGX===")
-        response = index(tyke, sec_ACL, cACL)
-        return response
-        return False
+    # try:
+    #     url = 'http://39.105.219.78:8000/sgx'
+    #     data = {'tyke': tyke, 'sec_ACL': sec_ACL, 'cACL': cACL}
+    #     headers = {'Content-Type': 'application/json'}
+    #     response = requests.post(url, data=json.dumps(data), headers=headers)
+    #     data = response.json()
+    #     print("Access SGX successfully")
+    #     return data["Flag"]
+    # except:
+    print("Unable to access SGX===")
+    response = index(tyke, sec_ACL, cACL)
+    return response
+    return False
 
 
 def hm_encrypt(tyke, chm_b, cACL):
-    if tyke == 2:
+    # print(tyke)
+    if tyke == 1:
         sec_ACL = 3
         f = sgx(tyke, sec_ACL, cACL)
         if f:
@@ -117,8 +122,9 @@ def hm_encrypt(tyke, chm_b, cACL):
             return buf
         else:
             return ""
-    elif tyke == 4:
+    elif tyke == 3:
         sec_ACL = ['ONE', 'TWO', 'THREE']
+        # print(cACL)
         f = sgx(tyke, sec_ACL, cACL)
         if f:
             chm = attribute_unpack(chm_b)
@@ -128,7 +134,7 @@ def hm_encrypt(tyke, chm_b, cACL):
             return buf
         else:
             return ""
-    elif tyke == 6:
+    elif tyke == 5:
         sec_ACL = 'label'
         f = sgx(tyke, sec_ACL, cACL)
         if f:
@@ -145,20 +151,29 @@ def hm_encrypt(tyke, chm_b, cACL):
 def query_chain(id, i):
     key_chain = str(id)
     print("=========== 根据HASH查询：", key_chain, " ===========")
-    response = requests.get(url='http://119.29.232.209:9090/fabric/getData', params={"key": key_chain})
-    fileDict = json.loads(response.content.decode('utf-8'))
+    response = requests.get(url='http://127.0.0.1:8521/fabric/getData', params={"key": key_chain})
+    # fileDict = json.loads(response.content.decode('utf-8'))
+    fileDict = response.json()
+    # import ipdb; ipdb.set_trace()
+
     try:
-        fileMetaData = json.loads(fileDict["value"])
+        # fileMetaData = json.loads(fileDict["value"])
         if fileDict['code'] != 200:
             print("0-File retrieval failure")
         else:
+            # print(fileMetaData['Encryption method'])
+            # print(type(fileDict['value']))
+            fileMetaData = json.loads(fileDict["value"])
+            # print('=====',fileMetaData,"=====")
+            # print("++++++")
             print(fileMetaData['Encryption method'])
+            # print("++++++")
             tyke = _tyke(fileMetaData['Encryption method'])
             cACL = fileMetaData["ACL"]
             chm_b = fileMetaData['key'].encode("ISO-8859-1")
             txs[i] = {"tyke": tyke, "cACL": cACL, "chm_b": chm_b}
     except Exception as e:
-        print(e)
+        # print(e)
         print("2-File retrieval failure")
 
 
@@ -188,7 +203,7 @@ def main():
         threads.append(thread)
         thread.start()
         cn += 1
-
+    # print("cn1:", cn)
     for thread in threads:
         thread.join()
 
@@ -204,6 +219,8 @@ def main():
     i_time = time.time()
 
     for i in range(n):
+        # print(i)
+        print(txs)
         if txs[i] is None or txs[i] == "":
             bufs[i] = ""
         else:
@@ -211,6 +228,8 @@ def main():
             tyke = tx["tyke"]
             cACL = tx["cACL"]
             chm_b = tx["chm_b"]
+            # print("00000000")
+            # assert tyke==3
             bufs[i] = hm_encrypt(tyke, chm_b, cACL)
 
     e_time = time.time()
@@ -228,6 +247,7 @@ def main():
         addresse = mes_addresses[j]
         host = addresse[0]
         port = addresse[1]
+        # print(bufs[i])
         if bufs[i] != '':
             thread = threading.Thread(target=Client_send, args=(host, port, bufs[i],))
             threads.append(thread)

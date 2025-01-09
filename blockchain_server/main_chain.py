@@ -42,9 +42,10 @@ def _hash(x):
 
 def cochain(tx, cn):
     print("=========== 文件元信息上链 ===========")
+    # print(tx, cn)
     fields = json.loads(tx.decode())
 
-    res = requests.post('http://119.29.232.209:9090/fabric/setData', data=fields)
+    res = requests.post('http://127.0.0.1:8521/fabric/setData', data=fields)
     res = str(res) + "---" + str(cn) + "---" + str(time.time() - _time)
     timelog = chain_time_log()
     timelog.info(res)
@@ -61,7 +62,7 @@ def main():
 
     chain_q = mpQueue()
     chain_put = chain_q.put_nowait
-    chain_get = lambda: chain_q.get(timeout=0.00001)
+    chain_get = lambda: chain_q.get(timeout=0.01)
     chain_ready = mpValue(c_bool, False)
     stop = mpValue(c_bool, False)
 
@@ -76,10 +77,16 @@ def main():
     threads = []
 
     while chain_ready:
+        # while not chain_q.empty():
+        #     item = chain_q.get()
+        #     print(item)
+        # print("www")
         if not chain_q.empty():
-            tx = chain_get()
+            # print(tx, tx_h) # b'',b'...'
+            tx = chain_get()    
+            # print(tx)
             tx_h = _hash(tx)
-
+            # print(tx, tx_h) # b'',b'...'
             if tx_h not in st:
                 st[tx_h] = False
 
@@ -104,7 +111,9 @@ def main():
                     if cn == 1:
                         _time = time.time()
                     timelog.info('Article ' + str(cn) + ' Data link time is ' + str(time.time() - _time))
+                    print("===",_tx,cn,"===")
                     thread = threading.Thread(target=cochain, args=(_tx, cn))
+                    print(thread)
                     threads.append(thread)
                     thread.start()
 

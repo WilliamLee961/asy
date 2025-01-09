@@ -60,7 +60,7 @@ def trusted_key_gen(N=4, f=1, seed=None):
         with open(os.getcwd() + '/keys/' + 'sSK2-' + str(i) + '.key', 'wb') as fp:
             pickle.dump(sSK2s[i].secret, fp)
 
-
+# N=4 F=1
 if __name__ == '__main__':
     
     import argparse

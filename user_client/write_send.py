@@ -1,4 +1,5 @@
 from typing import Any
+from Crypto.Cipher import PKCS1_OAEP
 
 import socket
 import hashlib
@@ -20,7 +21,7 @@ n = 1
 txs = [None] * (n + 10)
 
 
-def tx_generator(size=250, chars=string.ascii_uppercase + string.digits):
+def tx_generator(size=20, chars=string.ascii_uppercase + string.digits):
     return '<Dummy TX: ' + ''.join(random.choice(chars) for _ in range(size - 10)) + '>'
 
 
@@ -57,9 +58,11 @@ def get_len(msg):
 
 def Client_send(host, port, tx):
     try:
+        print(host, port)
         sk = socket.socket()
         sk.connect((host, port))
         _tx = get_len(tx)
+        # print("+++", _tx, "+++")
         sk.sendall(_tx)
         # data = sk.recv(1024)
         # print("tx---",len(_tx))
@@ -95,8 +98,8 @@ def key_streamcipher_gen():
 
 
 def rsa_keygen():
-    with open('rsa_key/PK.pem', 'rb') as f:
-        public_key = RSA.import_key(f.read())
+    with open('./responseSGX/rsa/PK.pem', 'rb') as f:
+        public_key = RSA.importKey(f.read())
     return public_key
 
 
@@ -114,6 +117,7 @@ def _Broadcast(i, id, m):
     ACL = ', '.join(map(str, ACL))
     ccACL = rsa_encipher(public_key, ACL.encode(
         "ISO-8859-1")).decode("ISO-8859-1")
+
     hm = _hash(m)
     cm = Broadcast_encryption(4, nodes_deleted, key_streamcipher, m)
     chm = Broadcast_encryption(4, nodes_deleted, key_streamcipher, hm)
@@ -152,11 +156,19 @@ def _Threshold(i, id, m):
     public_key = rsa_keygen()
     ccACL = rsa_encipher(public_key, ACL.encode(
         "ISO-8859-1")).decode("ISO-8859-1")
+
     cm = Threshold_encryption(m, ACL)
     tyke = 5
+    ##################
     fields = _pack_chain(tyke, key_chain, chm, ccACL)
     buf = _pack(tyke, fields, hm, cm)
+    # print()
+    # print(buf)
+    # print()
+    # import ipdb; ipdb.set_trace()
     txs[i] = buf
+    #################
+    return tyke, chm, ccACL
 
 
 def main():
@@ -215,8 +227,9 @@ def main():
     input("按 Enter 键继续...")
     threads = []
     i_time = time.time()
-
+    # print(txs)  # None,....
     for i in range(n):
+        print("+++++",txs[i])
         j = i % N
         addresse = mes_addresses[j]
         host = addresse[0]
